@@ -40,7 +40,9 @@
     "@satorijs/core": "^4.1.1"
   },
   "devDependencies": {
-    "@cordisjs/client": "^0.1.7"
+    "@cordisjs/client": "^0.1.7",
+    "@cordisjs/plugin-webui": "^0.1.7",
+    "@satorijs/core": "^4.1.1"
   },
   "dependencies": {
     "cosmokit": "^1.6.2"
