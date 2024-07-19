@@ -1,5 +1,5 @@
 {
-  "name": "@satorijs/plugin-im",
+  "name": "@satorijs/plugin-im-webui",
   "description": "IM for Satori",
   "version": "0.0.0",
   "type": "module",
@@ -31,7 +31,8 @@
   "cordis": {
     "service": {
       "required": [
-        "webui"
+        "webui",
+        "im"
       ]
     }
   },
@@ -41,10 +42,13 @@
   },
   "devDependencies": {
     "@cordisjs/client": "^0.1.7",
+    "@cordisjs/plugin-http": "^0.5.3",
     "@cordisjs/plugin-webui": "^0.1.7",
-    "@satorijs/core": "^4.1.1"
+    "@satorijs/core": "^4.1.1",
+    "@satorijs/plugin-server": "^2.6.5"
   },
   "dependencies": {
+    "cordis": "^3.17.4",
     "cosmokit": "^1.6.2"
   }
 }
