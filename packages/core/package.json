@@ -1,57 +1,56 @@
 {
-        "name": "@satorijs/plugin-im",
-        "description": "Background for Satori IM",
-        "version": "0.0.0",
-        "type": "module",
-        "main": "lib/index.js",
-        "files": [
-              "lib",
-              "dist"
-        ],
-        "author": "Shigma <shigma10826@gmail.com>",
-        "license": "MIT",
-        "scripts": {
-              "lint": "eslint src --ext .ts"
-        },
-        "repository": {
-              "type": "git",
-              "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
-              "directory": "packages/im"
-        },
-        "bugs": {
-              "url": "https://github.com/koishijs/koishi-plugin-im/issues"
-        },
-        "keywords": [
-              "satori",
-              "plugin",
-              "chat",
-              "im",
-              "database"
-        ],
-        "cordis": {
-              "service": {
-                    "required": [
-                          "database-mysql"
-                    ],
-                    "implements": [
-                          "im.data"
-                    ]
-              }
-        },
-        "peerDependencies": {
-              "@satorijs/core": "^4.1.1"
-        },
-        "devDependencies": {
-              "@cordisjs/plugin-webui": "^0.1.7",
-              "@satorijs/core": "^4.1.1",
-              "@types/uuid": "^10",
-              "uuid": "^10.0.0"
-        },
-        "dependencies": {
-              "@minatojs/driver-mysql": "^3.4.1",
-              "cordis": "^3.17.4",
-              "cosmokit": "^1.6.2",
-              "minato": "^3.4.3"
-        }
+  "name": "@satorijs/plugin-im",
+  "description": "Background for Satori IM",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "author": "Shigma <shigma10826@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
+    "directory": "packages/im"
+  },
+  "bugs": {
+    "url": "https://github.com/koishijs/koishi-plugin-im/issues"
+  },
+  "keywords": [
+    "satori",
+    "plugin",
+    "chat",
+    "im",
+    "database"
+  ],
+  "cordis": {
+    "service": {
+      "required": [
+        "database-mysql"
+      ],
+      "implements": [
+        "im.data"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@satorijs/core": "^4.1.1"
+  },
+  "devDependencies": {
+    "@cordisjs/plugin-webui": "^0.1.12",
+    "@satorijs/core": "^4.1.1",
+    "@types/uuid": "^10",
+    "uuid": "^10.0.0"
+  },
+  "dependencies": {
+    "@minatojs/driver-mysql": "^3.4.1",
+    "cordis": "^3.17.4",
+    "cosmokit": "^1.6.2",
+    "minato": "^3.4.3"
   }
-    
+}
