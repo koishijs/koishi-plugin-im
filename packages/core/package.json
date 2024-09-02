@@ -30,27 +30,27 @@
   ],
   "cordis": {
     "service": {
-      "required": [
-        "database-mysql"
-      ],
       "implements": [
-        "im.data"
+        "im.auth",
+        "im.data",
+        "im.event",
+        "im"
       ]
     }
   },
   "peerDependencies": {
-    "@satorijs/core": "^4.1.1"
+    "@satorijs/core": "^4.2.6"
   },
   "devDependencies": {
-    "@cordisjs/plugin-webui": "^0.1.12",
-    "@satorijs/core": "^4.1.1",
-    "@types/uuid": "^10",
-    "uuid": "^10.0.0"
+    "@cordisjs/plugin-server": "^0.2.3",
+    "@satorijs/core": "^4.2.6",
+    "@types/mime-types": "^2"
   },
   "dependencies": {
-    "@minatojs/driver-mysql": "^3.4.1",
-    "cordis": "^3.17.4",
+    "@minatojs/driver-mysql": "^3.5.0",
+    "cordis": "^3.18.0",
     "cosmokit": "^1.6.2",
-    "minato": "^3.4.3"
+    "mime-types": "^2.1.35",
+    "minato": "^3.5.1"
   }
 }
