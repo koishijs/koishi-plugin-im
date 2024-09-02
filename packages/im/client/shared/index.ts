@@ -1,14 +1,12 @@
-import { useStorage } from '@cordisjs/client'
-import { ImTypes } from '@satorijs/plugin-im'
+import { Dict, useStorage } from '@cordisjs/client'
+import type Window from '../components/scene'
 
 interface SharedConfig {
-  shouldLogin: boolean
-  currentUser: ImTypes.User | null
+  token: string
 }
 
 const shared = useStorage<SharedConfig>('im', 1, () => ({
-  shouldLogin: true,
-  currentUser: null,
+  token: '',
 }))
 
 export default shared
