@@ -57,4 +57,21 @@ export class EntryService extends Service {
       })
     )
   }
+
+  // Only supports v1 apis.
+  addListenerWithAuth<K extends keyof Events>(event: K, callback: any): void {
+    this.ctx.webui.addListener(event, async (data: any): Promise<any> => {
+      try {
+        const decode = await this.ctx['im.auth']._verifyToken(data.login.token)
+        data.login.clientId = decode.clientId
+        data.login.selfId = decode.user!.id
+        return callback(data)
+      } catch (e) {
+        if (e) {
+          this.ctx['im.auth'].logout(data.token)
+          throw e
+        }
+      }
+    })
+  }
 }
