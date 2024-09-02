@@ -29,12 +29,7 @@
     "im"
   ],
   "cordis": {
-    "service": {
-      "required": [
-        "webui",
-        "im"
-      ]
-    }
+    "service": {}
   },
   "peerDependencies": {
     "@cordisjs/plugin-webui": "^0.1.12",
