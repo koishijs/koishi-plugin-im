@@ -13,11 +13,6 @@ export default class ImDatabase {
         },
         nick: 'char(255)',
         avatar: 'char(255)',
-        password: {
-          type: 'char',
-          length: 255,
-          nullable: false,
-        },
       },
       {
         primary: ['id'],
@@ -25,16 +20,34 @@ export default class ImDatabase {
       }
     )
     ctx.model.extend(
+      'satori-im.user.auth',
+      {
+        user: {
+          type: 'oneToOne',
+          table: 'satori-im.user',
+          target: 'auth',
+        },
+        password: {
+          type: 'char',
+          length: 255,
+          nullable: false,
+        },
+      },
+      {
+        primary: ['user'],
+      }
+    )
+    ctx.model.extend(
       'satori-im.user.settings',
       {
-        origin: {
+        user: {
           type: 'manyToOne',
           table: 'satori-im.user',
-          target: 'settings.user',
         },
         target: {
           type: 'manyToOne',
           table: 'satori-im.user',
+          target: 'settings',
         },
         level: {
           type: 'unsigned',
@@ -42,19 +55,50 @@ export default class ImDatabase {
           initial: 2,
         },
       },
-      { primary: ['origin', 'target'] }
+      { primary: ['user', 'target'] }
     )
+    ctx.model.extend(
+      'satori-im.user.preferences',
+      {
+        user: {
+          type: 'manyToOne',
+          table: 'satori-im.user',
+          target: 'perferences',
+        },
+      },
+      {
+        primary: ['user'],
+      }
+    )
+    // FIXME: combined unique doesnt support relation.
     ctx.model.extend(
       'satori-im.friend',
       {
-        origin: {
+        id: 'char(255)',
+        'self.id': 'char(255)',
+        'target.id': 'char(255)',
+        createdAt: 'unsigned(8)',
+        deleted: {
+          type: 'boolean',
+          initial: false,
+        },
+      },
+      {
+        primary: ['id'],
+        unique: [['self.id', 'target.id']],
+      }
+    )
+    ctx.model.extend(
+      'satori-im.friend.settings',
+      {
+        user: {
           type: 'manyToOne',
           table: 'satori-im.user',
         },
-        target: {
+        friend: {
           type: 'manyToOne',
-          table: 'satori-im.user',
-          target: 'friends',
+          table: 'satori-im.friend',
+          target: 'settings',
         },
         group: 'char(255)',
         pinned: {
@@ -64,7 +108,7 @@ export default class ImDatabase {
         nick: 'char(255)',
       },
       {
-        primary: ['origin', 'target'],
+        primary: ['user', 'friend'],
       }
     )
     ctx.model.extend(
@@ -72,11 +116,16 @@ export default class ImDatabase {
       {
         id: 'char(255)',
         name: {
-          type: 'string',
+          type: 'char',
           length: 255,
           nullable: false,
         },
         avatar: 'char(255)',
+        createdAt: 'unsigned(8)',
+        deleted: {
+          type: 'boolean',
+          initial: false,
+        },
       },
       {
         primary: ['id'],
@@ -87,12 +136,12 @@ export default class ImDatabase {
       {
         guild: {
           type: 'manyToOne',
-          table: 'satori-im.user',
-          target: 'settings.guild',
+          table: 'satori-im.guild',
+          target: 'settings',
         },
         user: {
           type: 'manyToOne',
-          table: 'satori-im.guild',
+          table: 'satori-im.user',
         },
         group: 'char(255)',
         pinned: 'boolean',
@@ -112,76 +161,45 @@ export default class ImDatabase {
         user: {
           type: 'manyToOne',
           table: 'satori-im.user',
+          target: 'members',
         },
         name: 'char(255)', // name of member identity
+        createdAt: 'unsigned(8)',
       },
       {
         primary: ['guild', 'user'],
       }
     )
+    // FIXME: combined unique doesnt support relation.
     ctx.model.extend(
       'satori-im.role',
       {
-        id: 'char(255)',
-        user: {
+        id: 'string',
+        users: {
           type: 'manyToMany',
           table: 'satori-im.user',
           target: 'roles',
         },
-        // guild: {
-        //   type: 'manyToOne',
-        //   table: 'satori-im.guild',
-        //   target: 'roles',
-        //   nullable: false,
-        // },
-        'guild.id': 'char(255)',
+        guild: {
+          type: 'manyToOne',
+          table: 'satori-im.guild',
+          target: 'roles',
+        },
+        gid: 'char(255)',
         name: {
-          type: 'string',
+          type: 'char',
           length: 255,
           nullable: false,
         },
         color: 'integer',
-        position: 'integer',
         permissions: 'bigint',
-        hoist: 'boolean',
-        mentionable: 'boolean',
       },
       {
         primary: ['id'],
-        unique: [['guild.id', 'name']],
+        unique: [['gid', 'name']],
       }
     )
-    ctx.model.extend(
-      'satori-im.message.test',
-      {
-        id: 'char(255)',
-        'user.id': 'char(255)',
-        'channel.id': 'char(255)',
-        'guild.id': 'char(255)',
-        'quote.id': 'char(255)',
-        content: 'text',
-        createdAt: 'unsigned(8)',
-        updatedAt: 'unsigned(8)',
-      },
-      {
-        primary: ['id'],
-      }
-    )
-    ctx.model.extend(
-      'satori-im.message.settings',
-      {
-        message: {
-          type: 'manyToOne',
-          table: 'satori-im.message.test',
-        },
-        user: {
-          type: 'manyToOne',
-          table: 'satori-im.user',
-          target: 'settings.message',
-        },
-      },
-      { primary: ['message', 'user'] }
-    )
+
     ctx.model.extend(
       'satori-im.channel',
       {
@@ -189,6 +207,20 @@ export default class ImDatabase {
         name: 'char(255)',
         type: 'unsigned(1)',
         parentId: 'char(255)',
+        friend: {
+          type: 'oneToOne',
+          table: 'satori-im.friend',
+          target: 'channel',
+        }, // FIXME: doesnt work.
+        guild: {
+          type: 'manyToOne',
+          table: 'satori-im.guild',
+          target: 'channels',
+        },
+        deleted: {
+          type: 'boolean',
+          initial: false,
+        },
       },
       {
         primary: ['id'],
@@ -200,11 +232,11 @@ export default class ImDatabase {
         user: {
           type: 'manyToOne',
           table: 'satori-im.user',
-          target: 'settings.channel',
         },
         channel: {
           type: 'manyToOne',
           table: 'satori-im.channel',
+          target: 'settings',
         },
         pinned: {
           type: 'boolean',
@@ -215,38 +247,111 @@ export default class ImDatabase {
           length: 1,
           initial: 0,
         },
-        lastRead: 'char(255)',
+        lastRead: {
+          type: 'unsigned',
+          length: 8,
+          initial: new Date().getTime(),
+        },
       },
       {
         primary: ['channel', 'user'],
       }
     )
     ctx.model.extend(
-      'satori-im.login',
+      'satori-im.message.test',
+      {
+        id: 'char(255)',
+        user: {
+          type: 'manyToOne',
+          table: 'satori-im.user',
+        },
+        channel: {
+          type: 'manyToOne',
+          table: 'satori-im.channel',
+          target: 'messages',
+        },
+        'quote.id': 'string',
+        content: 'text',
+        createdAt: 'unsigned(8)',
+        updatedAt: 'unsigned(8)',
+        deleted: {
+          type: 'boolean',
+          initial: false,
+        },
+      },
+      {
+        primary: ['id'],
+      }
+    )
+    ctx.model.extend(
+      'satori-im.message.settings',
       {
         user: {
           type: 'manyToOne',
           table: 'satori-im.user',
-          target: 'logins',
         },
+        message: {
+          type: 'manyToOne',
+          table: 'satori-im.message.test',
+          target: 'settings',
+        },
+      },
+      { primary: ['message', 'user'] }
+    )
+    ctx.model.extend(
+      'satori-im.login',
+      {
+        token: 'char(255)',
+        clientId: 'char(255)',
+        selfId: 'char(255)',
         status: 'unsigned(1)',
         updateAt: 'unsigned(8)',
+        expiredAt: 'unsigned(8)',
       },
       {
-        primary: ['user'],
+        primary: ['token'],
       }
     )
-    ctx.model.extend('satori-im.notification', {
-      self: {
-        type: 'manyToOne',
-        table: 'satori-im.user',
+    ctx.model.extend(
+      'satori-im.notification',
+      {
+        id: 'char(255)',
+        selfId: 'char(255)',
+        user: {
+          type: 'manyToOne',
+          table: 'satori-im.user',
+          target: 'notifications',
+        },
+        guild: {
+          type: 'manyToOne',
+          table: 'satori-im.guild',
+        },
+        shouldReply: 'boolean',
+        content: 'char(255)',
+        createdAt: 'unsigned(8)',
       },
-      user: {
-        type: 'manyToOne',
-        table: 'satori-im.user',
+      {
+        primary: ['id'],
+        autoInc: true,
+      }
+    )
+    ctx.model.extend(
+      'satori-im.notification.settings',
+      {
+        self: {
+          type: 'manyToOne',
+          table: 'satori-im.notification',
+          target: 'settings',
+        },
+        user: {
+          type: 'manyToOne',
+          table: 'satori-im.user',
+        },
+        read: 'boolean',
       },
-      'guild.id': 'char(255)',
-      type: 'unsigned(0)',
-    })
+      {
+        primary: ['self', 'user'],
+      }
+    )
   }
 }
