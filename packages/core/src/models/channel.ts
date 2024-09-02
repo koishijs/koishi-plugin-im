@@ -6,29 +6,144 @@ import { genId } from '@satorijs/plugin-im-utils'
 export class ChannelData {
   constructor(public ctx: Context) {}
 
-  async fetch(cid: string): Promise<Channel> {
-    const result = await this.ctx.database.get('satori-im.channel', {
-      id: cid,
-    })
+  fetch = async (login: Login, cid: string): Promise<Channel> => {
+    const result = await this.ctx.database
+      .select(
+        'satori-im.channel',
+        {
+          id: cid,
+          deleted: false,
+          settings: {
+            $or: [
+              {
+                $some: (row) => $.eq(row.user.id, login.selfId!),
+              },
+              {
+                $none: {},
+              },
+            ],
+          },
+        },
+        {
+          friend: true,
+          guild: true,
+          settings: true,
+        }
+      )
+      .execute()
     return result[0]
   }
 
-  async create(gid: string, data: { name: string }): Promise<Channel> {
-    return await this.ctx.database.create('satori-im.channel', {
+  fetchSessionList = async (login: Login): Promise<Array<Channel>> => {
+    const result = await this.ctx.database
+      .select(
+        'satori-im.channel',
+        {
+          deleted: false,
+          settings: {
+            $or: [
+              {
+                $some: (row) => $.eq(row.user.id, login.selfId!),
+              },
+              {
+                $none: {},
+              },
+            ],
+          },
+          messages: {
+            $some: (row) => $.gt(row.createdAt, MessageData.recentEndpoint()),
+          },
+        },
+        {
+          settings: true,
+          guild: true,
+          friend: true,
+          messages: true,
+        }
+      )
+      .project({
+        id: (row) => row.id,
+        type: (row) => row.type,
+        name: (row) => row.name,
+        friend: (row) => row.friend,
+        guild: (row) => row.guild,
+        settings: (row) => row.settings,
+      })
+      .execute()
+    return result
+  }
+
+  create = async (login: Login, gid: string, name: string): Promise<Channel> => {
+    const result = await this.ctx.database.create('satori-im.channel', {
       id: genId(),
-      name: data.name,
-      type: Universal.Channel.Type.TEXT,
+      name: name,
+      type: Channel.Type.TEXT,
       parentId: gid,
     })
+    this.ctx.im.event.pushEvent({
+      selfId: login.selfId!,
+      type: 'channel-added',
+      channel: result,
+    })
+    return result
   }
 
-  async _update(cid: string, data: { name: string }): Promise<void> {
-    const result = await this.ctx.database.set('satori-im.channel', cid, {
-      name: data.name,
+  update = async (login: Login, cid: string, name?: string) => {
+    const result = await this.ctx.database.set(
+      'satori-im.channel',
+      {
+        id: cid,
+        deleted: false,
+      },
+      {
+        name: name,
+      }
+    )
+    if (!result.matched) {
+      throw new Error()
+    }
+    if (!result.modified) {
+      throw new Error()
+    }
+    this.ctx.im.event.pushEvent({
+      selfId: login.selfId!,
+      type: 'channel-updated',
+      channel: { id: cid, name } as Channel,
     })
   }
 
-  async _softDel(cid: string): Promise<void> {
-    const result = await this.ctx.database.remove('satori-im.channel', cid)
+  updateSettings = async (login: Login, cid: string) => {
+    await this.ctx.database.upsert('satori-im.channel.settings', (row) => [
+      {
+        lastRead: new Date().getTime(),
+        channel: { id: cid },
+        user: { id: login.selfId },
+      },
+    ])
+  }
+
+  softDel = async (login: Login, cid: string) => {
+    this.ctx.database.transact(async (db) => {
+      await db.set('satori-im.channel', cid, {
+        deleted: false,
+      })
+      await db.remove('satori-im.channel.settings', {
+        channel: { id: cid },
+      })
+    })
+
+    this.ctx.im.event.pushEvent({
+      selfId: login.selfId!,
+      type: 'channel-deleted',
+      channel: { id: cid } as Channel,
+    })
+  }
+}
+
+namespace MessageData {
+  export function recentEndpoint(): number {
+    const date = new Date()
+    date.setMonth(date.getMonth() - 3)
+    return date.getTime()
   }
 }
