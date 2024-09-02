@@ -1,10 +1,10 @@
-import { App } from 'vue'
+import { Context } from '@cordisjs/client'
 import Avatar from './avatar.vue'
-import Login from './login-form.vue'
 import Tag from './role-tag.vue'
+import UserSelector from './selector.vue'
 
-export default function (app: App) {
-  app.component('k-im-avatar', Avatar)
-  app.component('k-im-login', Login)
-  app.component('k-im-tag', Tag)
+export default function (ctx: Context) {
+  ctx.app.component('im-avatar', Avatar)
+  ctx.app.component('im-tag', Tag)
+  ctx.app.component('user-selector', UserSelector)
 }

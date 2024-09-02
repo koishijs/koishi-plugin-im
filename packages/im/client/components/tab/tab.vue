@@ -1,52 +1,85 @@
 <template>
-  <div class="k-im-tab flex">
-    <span
+  <div class="im-tab flex">
+    <label
       v-for="(item, index) in data"
       :key="index"
+      class="flex justify-center items-center relative"
+      :class="{ active: current === index }"
       :style="{ flexGrow: item.grow || 1 }"
-      @click="emit('item-click', index)"
+      @click="handleSelect(index)"
+      ref="tabRefs"
     >
-      <template v-if="item.isIcon === true"> <k-icon :name="item.label" /> </template
-      ><template v-else>
-        {{ item.label }}
-      </template>
-    </span>
+      <k-icon v-if="item.icon" :name="item.icon"></k-icon>
+      {{ item.label }}
+    </label>
+    <div class="active-bar" :style="locator"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-declare interface TabProps {
-  label: string
-  isIcon: boolean
-  grow?: number
-}
+import { computed, ref, onMounted, nextTick } from 'vue'
 
 const emit = defineEmits(['item-click'])
+const current = defineModel<number>({ default: 0 })
 
 const props = defineProps<{
-  data: Array<TabProps>
+  data: Array<{
+    label?: string
+    icon?: string
+    grow?: number
+  }>
 }>()
+
+onMounted(() => {
+  nextTick(() => {
+    current.value = current.value
+  })
+}) // debounce
+
+const tabRefs = ref<HTMLElement[]>([])
+
+const locator = computed(() => {
+  const element = tabRefs.value[current.value]
+  return element
+    ? {
+        transform: `translateX(${element.offsetLeft}px)`,
+        width: `${element.offsetWidth}px`,
+      }
+    : {}
+})
+
+function handleSelect(index: number) {
+  current.value = index
+  emit('item-click', index)
+}
 </script>
 
 <style scoped lang="scss">
-.k-im-tab {
+.im-tab {
   overflow: hidden;
+  position: relative;
 
-  span {
+  label {
     text-align: center;
     padding: 10px 0;
     cursor: pointer;
     transition: all 0.1s ease-out;
 
     &:hover {
-      background-color: var(--bg3);
-      color: var(--active);
+      opacity: 0.8;
     }
 
     &.active {
-      background-color: #ddd;
-      font-weight: bold;
+      color: var(--k-color-active);
     }
+  }
+
+  .active-bar {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: var(--k-color-active);
+    transition: transform 0.3s ease, width 0.3s ease;
   }
 }
 </style>
