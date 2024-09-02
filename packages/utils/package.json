@@ -1,0 +1,38 @@
+{
+  "name": "@satorijs/plugin-im-utils",
+  "description": "Utils of Satori IM",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "author": "Shigma <shigma10826@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
+    "directory": "packages/im"
+  },
+  "bugs": {
+    "url": "https://github.com/koishijs/koishi-plugin-im/issues"
+  },
+  "keywords": [
+    "satori",
+    "plugin",
+    "chat",
+    "im",
+    "database"
+  ],
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  },
+  "dependencies": {
+    "cordis": "^3.18.0",
+    "uuid": "^10.0.0"
+  }
+}
