@@ -1,5 +1,5 @@
-import { Context, Service } from 'cordis'
-import { Client, Entry } from '@cordisjs/plugin-webui'
+import { Context, Service } from '@satorijs/core'
+import { Client, Entry, Events } from '@cordisjs/plugin-webui'
 
 export class ImEntry extends Entry {
   constructor(
@@ -13,7 +13,10 @@ export class ImEntry extends Entry {
   unicast(clientId: string, data: any) {
     const client = this.ctx.webui.clients[clientId]
     if (client) {
-      const payload = { type: 'entry:update', body: { id: this.id, data } }
+      const payload = {
+        type: 'entry:update',
+        body: { id: this.id, data: { ...this.data?.(client), ...data } },
+      }
       client.socket.send(JSON.stringify(payload))
     }
   }
@@ -36,10 +39,10 @@ export class ImEntry extends Entry {
 }
 
 export class EntryService extends Service {
-  static inject = ['webui', 'server']
+  static inject = ['webui', 'server', 'im', 'im.auth']
   public entry: ImEntry
 
-  constructor(ctx: Context) {
+  constructor(public ctx: Context) {
     super(ctx, 'im.entry')
     this.entry = new ImEntry(
       ctx,
