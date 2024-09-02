@@ -1,12 +1,10 @@
-import { Context, Universal } from '@satorijs/core'
-import { Channel } from '../types'
-import { genId } from '../utils'
+import { $ } from 'minato'
+import { Context } from '@satorijs/core'
+import { Channel, Login } from '../types'
+import { genId } from '@satorijs/plugin-im-utils'
 
 export class ChannelData {
-  constructor(public ctx: Context) {
-    ctx.webui.addListener('im/v1/channel/fetch', this.fetch)
-    ctx.webui.addListener('im/v1/channel/create', this.create)
-  }
+  constructor(public ctx: Context) {}
 
   async fetch(cid: string): Promise<Channel> {
     const result = await this.ctx.database.get('satori-im.channel', {

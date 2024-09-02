@@ -9,11 +9,8 @@ declare module '@cordisjs/plugin-webui' {
 
 export class GuildData {
   public cache?: Universal.List<Guild>
+  constructor(public ctx: Context) {}
 
-  constructor(public ctx: Context) {
-    ctx.webui.addListener('im/v1/guild/fetch', this.fetch)
-    ctx.webui.addListener('im/v1/guild/fetch-all', this.list)
-    ctx.webui.addListener('im/v1/guild/create', this.create)
 
     ctx.webui.addListener('im/v1/guild-member/fetch-all', this.Member.list)
   }

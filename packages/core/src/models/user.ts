@@ -2,10 +2,7 @@ import { Context } from '@satorijs/core'
 import { User } from '../types'
 
 export class UserData {
-  constructor(public ctx: Context) {
-    ctx.webui.addListener('im/v1/user/fetch', this.fetch)
-    ctx.webui.addListener('im/v1/user/update', this.update)
-    ctx.webui.addListener('im/v1/user/remove', this.softDel)
+  constructor(public ctx: Context) {}
   }
 
   async fetch(uid: string): Promise<User> {

@@ -1,7 +1,7 @@
 import { Context, Service } from '@satorijs/core'
 
-export class ImDataService extends Service {
-  static inject = ['model', 'database', 'webui']
+class ImDataService extends Service<ImDataService.Config> {
+  static inject = ['server', 'model', 'database'] // FIXME: self injection
 
   constructor(public ctx: Context) {
     super(ctx, 'im.data', true)

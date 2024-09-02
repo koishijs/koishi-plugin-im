@@ -3,11 +3,7 @@ import { Context } from '@satorijs/core'
 import { Friend } from '../types'
 
 export class FriendData {
-  constructor(public ctx: Context) {
-    ctx.webui.addListener('im/v1/friend/fetch', this.fetch)
-    ctx.webui.addListener('im/v1/friend/fetch-all', this.fetchAll)
-    ctx.webui.addListener('im/v1/friend/remove', this.hardDel)
-  }
+  constructor(public ctx: Context) {}
 
   async fetch(uid: string, target: string): Promise<Friend> {
     const result = await this.ctx.database.get('satori-im.friend', (row) =>
