@@ -67,9 +67,9 @@ const rpcData = useRpc<Data>()
 
 watch(
   () => rpcData.value.eventChan,
-  () => {
+  (value) => {
     if (chat.status.value === 'logged') {
-      chat._eventHandler(rpcData.value.eventChan)
+      chat._eventHandler(value)
     }
   }
 )

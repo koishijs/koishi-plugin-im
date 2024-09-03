@@ -83,8 +83,8 @@ const leftValue = ref<Array<SelectItem>>([])
 const rightValue = computed(() => leftValue.value.filter((item) => item.active))
 watch(
   () => rightValue.value,
-  () => {
-    selected.value = rightValue.value.map((item) => item.user.id)
+  (right) => {
+    selected.value = right.map((item) => item.user.id)
   }
 )
 

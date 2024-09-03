@@ -43,12 +43,13 @@ const except = computed(() =>
 
 watch(
   () => props.keyword,
-  debounce(() => {
-    fetchPage(props.type as any, props.keyword).then((data) => {
-      page.data = data!
-      loaded.value = true
-    })
-  }, 500)
+  (keyword) =>
+    debounce(() => {
+      fetchPage(props.type as any, keyword).then((data) => {
+        page.data = data!
+        loaded.value = true
+      })
+    }, 500)
 )
 
 function isSelected(item: Im.User) {
