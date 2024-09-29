@@ -7,9 +7,11 @@ import * as Model from './models'
 import { Login } from './types'
 import { genId } from '@satorijs/plugin-im-utils'
 
+// TODO: Implement role permissions.
 class ImDataService extends Service<ImDataService.Config> {
   static inject = ['server', 'model', 'database'] // FIXME: self injection
 
+  bot: Model.BotData
   user: Model.UserData
   friend: Model.FriendData
   guild: Model.GuildData
@@ -21,6 +23,7 @@ class ImDataService extends Service<ImDataService.Config> {
     super(ctx, 'im.data', true)
 
     // TODO: need better injections.
+    this.bot = new Model.BotData(this.ctx)
     this.user = new Model.UserData(this.ctx)
     this.friend = new Model.FriendData(this.ctx)
     this.guild = new Model.GuildData(this.ctx)
@@ -74,20 +77,20 @@ class ImDataService extends Service<ImDataService.Config> {
     return urlPath
   }
 
-  // TODO:
   writeFile = async (login: Login, b64: string) => {
     const mType = b64.match(/^data:(.*?);base64,/)
     if (!mType) throw Error()
     const ext = mime.extension(mType[1])
-    const filePath = path.join(this.config.assetPath, 'messages')
+    const filePath = path.join('messages', `${genId()}.${ext}`)
+    const filePathAbsolute = path.join(this.config.assetPath, filePath)
+    const fileData = b64.split('base64,')[1]
 
-    await fs.mkdir(filePath, { recursive: true })
-    await fs.writeFile(
-      filePath + `/${genId()}-${login.selfId}.tmp.${ext}`,
-      Buffer.from(b64, 'base64')
-    )
+    await fs.mkdir(path.dirname(filePathAbsolute), { recursive: true })
+    await fs.writeFile(filePathAbsolute, Buffer.from(fileData, 'base64'))
 
-    return `${this.ctx.server.selfUrl}/${filePath}`
+    const urlPath = encodeURI(filePath.replace(/\\/g, '/'))
+
+    return urlPath
   }
 }
 
