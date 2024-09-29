@@ -1,12 +1,10 @@
 <template>
   <div class="flex-1 flex flex-col">
     <div class="p-4 flex flex-col gap-2 bg-[var(--bg1)]">
-      <im-avatar size="medium"></im-avatar>
+      <im-avatar size="medium" :user="me"></im-avatar>
       <div class="px-1 flex flex-col gap-1">
-        <label class="font-size-5 font-bold"
-          >欢迎, {{ getDisplayName(chat.getLogin().user!) }}</label
-        >
-        <label>@{{ chat.getLogin().user!.name }}</label>
+        <label class="font-size-5 font-bold">欢迎, {{ getDisplayName(me) }}</label>
+        <label>@{{ me.name }}</label>
       </div>
     </div>
     <div class="search flex flex-row items-center">
@@ -20,12 +18,12 @@
       v-model="current"
       :data="tabItems"
     ></im-tab>
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1">
       <virtual-list
         v-if="tabItems[current].data.value"
         :data="tabItems[current].data.value"
         max-height="calc(100vh - 17rem)"
-        class="container select-none"
+        class="select-none"
       >
         <template #header> </template>
         <template #default="slotProps">
@@ -100,13 +98,15 @@ ctx.action('new-chat.create-guild', async () => {
   Scene.rend(id)
 })
 
+const me = computed(() => chat.getLogin().user!)
+
 function search(keyword: string) {}
 
 async function editUser() {
   const id = await Scene.create('edit-user', {
     uid: '1',
     title: '用户设定',
-    user: chat.getLogin().user!,
+    user: me.value,
   }) // TODO: ptr
   Scene.rend(id)
 } // HACK
@@ -121,6 +121,15 @@ async function showMsgBox() {
     {
       onInit: async (scene) => {
         scene.msgs = await send('im/v1/notification/fetch-all', { login: chat.getLogin() })
+        const userPromises = scene.msgs.map(async (msg) => {
+          const self = await chat.getUser(msg.selfId)
+          return {
+            ...msg,
+            self,
+          }
+        })
+
+        scene.msgs = await Promise.all(userPromises)
       },
     }
   )

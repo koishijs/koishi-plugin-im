@@ -3,6 +3,7 @@ import ImDatabase from './database'
 import { ImAuthService } from './auth'
 import ImDataService from './data'
 import { ImEventService } from './notifier'
+import { Event } from './types'
 
 export * as Im from './types'
 
@@ -18,6 +19,7 @@ declare module 'cordis' {
 declare module '@satorijs/core' {
   interface Events {
     'exit'(signal: NodeJS.Signals): Promise<void>
+    'im-message'(event: Event): Promise<void>
   }
 }
 

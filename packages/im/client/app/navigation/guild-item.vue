@@ -4,7 +4,7 @@
     :class="{ active: !isFolded }"
     @click="handleSwitch()"
   >
-    <im-avatar size="small"></im-avatar>
+    <im-avatar size="small" :guild="data"></im-avatar>
     <label class="font-bold flex-1">{{ data.name }}</label>
     <k-icon name="chevron-right"></k-icon>
   </div>

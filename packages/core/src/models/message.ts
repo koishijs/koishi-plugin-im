@@ -110,7 +110,7 @@ export class MessageData {
   }
 
   update = async (login: Login, cid: string, mid: string, content: string) => {
-    const result = await this.ctx.database.set(
+    await this.ctx.database.set(
       'satori-im.message.test',
       {
         id: mid,
@@ -118,12 +118,6 @@ export class MessageData {
       },
       { content }
     )
-    if (!result.matched) {
-      throw new Error()
-    }
-    if (!result.modified) {
-      throw new Error()
-    }
     this.ctx.im.event.pushEvent({
       selfId: login.selfId!,
       type: 'message-updated',
@@ -133,13 +127,7 @@ export class MessageData {
   }
 
   softDel = async (login: Login, cid: string, mid: string) => {
-    const result = await this.ctx.database.set('satori-im.message.test', mid, { deleted: true })
-    if (!result.matched) {
-      throw new Error()
-    }
-    if (!result.modified) {
-      throw new Error()
-    }
+    await this.ctx.database.set('satori-im.message.test', { id: mid }, { deleted: true })
     this.ctx.im.event.pushEvent({
       selfId: login.selfId!,
       type: 'message-deleted',

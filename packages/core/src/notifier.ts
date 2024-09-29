@@ -1,12 +1,5 @@
-import { Context, Dict, Service, Universal } from '@satorijs/core'
-import { Channel, Event, Friend, Guild, Login, Message, Notification, User } from './types'
-import { genId, v1Wrapper } from '@satorijs/plugin-im-utils'
-
-declare module '@satorijs/core' {
-  interface Events {
-    'im/subscribe'(data: { login: Login }): Promise<void>
-  }
-}
+import { Context, Dict, Service } from '@satorijs/core'
+import { Event, Login } from './types'
 
 export class ImEventService extends Service {
   static inject = ['database', 'im', 'im.auth']
@@ -30,6 +23,9 @@ export class ImEventService extends Service {
   }
 
   private _pushEvent(data: Event) {
+    // HACK: directly emit events to the only bot.
+    this.ctx.emit('im-message', data)
+
     const receivers: Dict<boolean> = {}
     if (data.guild) {
       for (let i = 0; i < data.guild.members!.length; i++) {

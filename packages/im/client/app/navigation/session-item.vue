@@ -4,13 +4,14 @@
     @click="Scene.rend(data.id!)"
     @contextmenu.stop="trigger($event, data)"
   >
-    <im-avatar size="small"></im-avatar>
-    <div class="flex-1 flex flex-col gap-1">
+    <!-- TODO: -->
+    <im-avatar size="small" :instance="data"></im-avatar>
+    <div class="flex-1 flex flex-col gap-1 max-w-60%">
       <div class="ellipsis font-bold">
         <label>{{ data.title }}</label>
         <label v-if="data.subtitle" class="color-[var(--fg2)]">{{ `:${data.subtitle}` }}</label>
       </div>
-      <label class="ellipsis font-size-3 color-[var(--fg2)] min-h-2">{{ data.brief }}</label>
+      <span class="ellipsis font-size-3 color-[var(--fg2)] min-h-2">{{ data.brief }}</span>
     </div>
     <el-badge
       v-if="data.unread && Scene.current.value.id !== data.id"
@@ -20,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, UnwrapRef } from 'vue'
+import { UnwrapRef } from 'vue'
 import { useContext, useMenu } from '@cordisjs/client'
 import Scene from '../scene'
 
@@ -51,6 +52,7 @@ const trigger = useMenu('session')
   }
 
   .ellipsis {
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }

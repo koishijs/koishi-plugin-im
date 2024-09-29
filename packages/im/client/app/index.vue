@@ -4,7 +4,7 @@
       <im-login></im-login>
     </k-layout>
     <k-layout v-else-if="chat.status.value === 'syncing'">
-      <k-empty></k-empty>
+      <k-empty>同步数据中...</k-empty>
     </k-layout>
     <k-layout v-else-if="chat.status.value === 'verifying'">
       <k-empty></k-empty>

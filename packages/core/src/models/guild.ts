@@ -1,6 +1,6 @@
 import { $ } from 'minato'
 import { Context } from '@satorijs/core'
-import { Channel, Guild, Login, Member, Role, ChunkOptions, extractSettings } from '../types'
+import { Channel, Guild, Login, Member, Role, ChunkOptions } from '../types'
 import { genId } from '@satorijs/plugin-im-utils'
 
 export class GuildData {
@@ -421,18 +421,11 @@ export class GuildData {
       return result
     },
 
-    create: async (
-      login: Login,
-      gid: string,
-      uid: string,
-      name: string,
-      color: number
-    ): Promise<Role> => {
+    create: async (login: Login, gid: string, name: string, color: number): Promise<Role> => {
       const result = await this.ctx.database.create('satori-im.role', {
         id: genId(),
         guild: { id: gid },
         gid,
-        users: [{ id: uid }],
         name,
         color,
       })
@@ -451,6 +444,30 @@ export class GuildData {
       if (!result.modified) {
         throw new Error()
       }
+    },
+
+    set: async (login: Login, rid: string, uid: string) => {
+      await this.ctx.database.set(
+        'satori-im.role',
+        {
+          id: rid,
+        },
+        {
+          users: { $upsert: { id: uid } },
+        }
+      )
+    },
+
+    unset: async (login: Login, rid: string, uid: string) => {
+      await this.ctx.database.set(
+        'satori-im.role',
+        {
+          id: rid,
+        },
+        {
+          users: { $remove: { id: uid } },
+        }
+      )
     },
 
     hardDel: async (login: Login, rid: string) => {

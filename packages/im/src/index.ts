@@ -26,6 +26,11 @@ declare module '@cordisjs/plugin-webui' {
     'im/v1/register'(data: { name: string; password: string }): Promise<string>
     'im/v1/validate-name'(data: { name: string }): Promise<boolean>
 
+    'im/v1/bot/fetch-commands'(data: {
+      login: Im.Login
+      id: string
+    }): Promise<Array<Im.Bot.Command>>
+
     'im/v1/search/user'(data: {
       login: Im.Login
       keyword: string
@@ -82,9 +87,14 @@ declare module '@cordisjs/plugin-webui' {
     'im/v1/guild-member/kick'(data: { login: Im.Login; gid: string; uid: string }): Promise<void>
     'im/v1/guild-role/fetch'(data: { login: Im.Login; gid: string; rid: string }): Promise<Im.Role>
     'im/v1/guild-role/fetch-all'(data: { login: Im.Login; gid: string }): Promise<Array<Im.Role>>
-    'im/v1/guild-role/create'(data: { login: Im.Login; uid: string; gid: string }): Promise<Im.Role>
-    'im/v1/guild-role/update'(data: { login: Im.Login; rid: string }): Promise<void>
-    'im/v1/guild-role/remove'(data: { login: Im.Login; rid: string }): Promise<void>
+    'im/v1/guild-role/create'(data: {
+      login: Im.Login
+      gid: string
+      name: string
+      color: number
+    }): Promise<Im.Role>
+    'im/v1/guild-role/update'(data: { login: Im.Login; gid: string; rid: string }): Promise<void>
+    'im/v1/guild-role/remove'(data: { login: Im.Login; gid: string; rid: string }): Promise<void>
 
     'im/v1/channel/fetch'(data: { login: Im.Login; cid: string }): Promise<Im.Channel>
     'im/v1/channel/create'(data: {
@@ -106,7 +116,7 @@ declare module '@cordisjs/plugin-webui' {
     }): Promise<Array<Im.Message>>
     'im/v1/message/create'(data: { login: Im.Login; message: Im.Message }): Promise<void>
     'im/v1/message/update'(data: { login: Im.Login; message: Im.Message }): Promise<void>
-    'im/v1/message/recall'(data: { login: Im.Login; cid: string; id: string }): Promise<void>
+    'im/v1/message/recall'(data: { login: Im.Login; cid: string; mid: string }): Promise<void>
     'im/v1/message/unread-count'(data: { login: Im.Login; cid: string }): Promise<number>
 
     'im/v1/notification/fetch-all'(data: { login: Im.Login }): Promise<Array<Im.Notification>>
@@ -271,5 +281,10 @@ export function apply(ctx: Context) {
     ctx['im.entry'].addListenerWithAuth('im/v1/file-upload', v1Wrapper(ctx.im.data.writeFile))
 
     ctx['im.entry'].addListenerWithAuth('im/v1/avatar-upload', v1Wrapper(ctx.im.data.writeAvatar))
+
+    ctx['im.entry'].addListenerWithAuth(
+      'im/v1/bot/fetch-commands',
+      v1Wrapper(ctx.im.data.bot.fetchCommands)
+    )
   })
 }

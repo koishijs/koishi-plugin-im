@@ -15,7 +15,7 @@ export class ImAuthService extends Service {
     ctx.on('dispose', this._save)
   }
 
-  authenticate = async (name: string, password: string, clientId): Promise<Login> => {
+  authenticate = async (name: string, password: string, clientId: string): Promise<Login> => {
     const result = await this.ctx.database
       .select(
         'satori-im.user.auth',

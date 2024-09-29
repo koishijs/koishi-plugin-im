@@ -3,7 +3,7 @@
     class="friend-item flex flex-row items-center gap-3 h-7 p-3 cursor-pointer"
     @click="handleSelect"
   >
-    <im-avatar size="small"></im-avatar>
+    <im-avatar size="small" :user="data.user"></im-avatar>
     <label class="font-bold"> {{ data.user.name }} </label>
   </div>
 </template>

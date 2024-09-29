@@ -60,9 +60,6 @@ export default function (ctx: Context) {
           set: (value) => {
             scene.friend.pinned = value
             // TODO:
-            // send('im/v1/friend/update-settings', {
-
-            // }).catch(() => (scene.friend.pinned = !value))
           },
         })
 
@@ -74,6 +71,7 @@ export default function (ctx: Context) {
             '',
           set: (value) => (manualBrief.value = value),
         })
+        scene.avatar = scene.friend.user.avatar
       },
       onMount: async (scene) => {
         scene.unread = -1 // HACK: cannot set unread to 0 twice.
@@ -104,11 +102,7 @@ export default function (ctx: Context) {
             if (scene.guild.settings?.[0].pinned) {
               scene.guild.settings[0].pinned = value
             }
-
             // TODO:
-            // send('im/v1/friend/update-settings', {
-
-            // }).catch(() => (scene.friend.pinned = !value))
           },
         })
 
@@ -120,6 +114,8 @@ export default function (ctx: Context) {
             '',
           set: (value) => (manualBrief.value = value),
         })
+
+        scene.avatar = scene.guild.avatar
       },
       onMount: async (scene) => {
         scene.unread = -1 // HACK: cannot set unread to 0 twice.
