@@ -1,54 +1,51 @@
 {
-          "name": "@satorijs/plugin-im-webui",
-          "description": "IM for Satori",
-          "version": "0.0.0",
-          "type": "module",
-          "main": "lib/index.js",
-          "files": [
-                    "lib",
-                    "dist"
-          ],
-          "author": "Shigma <shigma10826@gmail.com>",
-          "license": "MIT",
-          "scripts": {
-                    "lint": "eslint src --ext .ts"
-          },
-          "repository": {
-                    "type": "git",
-                    "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
-                    "directory": "packages/im"
-          },
-          "bugs": {
-                    "url": "https://github.com/koishijs/koishi-plugin-im/issues"
-          },
-          "keywords": [
-                    "satori",
-                    "plugin",
-                    "webui",
-                    "chat",
-                    "im"
-          ],
-          "cordis": {
-                    "service": {}
-          },
-          "peerDependencies": {
-                    "@cordisjs/plugin-webui": "^0.1.12",
-                    "@satorijs/core": "^4.1.1",
-                    "@satorijs/plugin-im": "^0.0.0",
-                    "@satorijs/plugin-im-utils": "^0.0.0"
-          },
-          "devDependencies": {
-                    "@cordisjs/client": "^0.1.12",
-                    "@cordisjs/plugin-http": "^0.5.3",
-                    "@cordisjs/plugin-webui": "^0.1.12",
-                    "@satorijs/core": "^4.1.1",
-                    "@satorijs/plugin-server": "^2.6.5",
-                    "@types/markdown-it": "^14"
-          },
-          "dependencies": {
-                    "cordis": "^3.17.7",
-                    "cosmokit": "^1.6.2",
-                    "markdown-it": "^14.1.0",
-                    "markdown-it-highlightjs": "^4.1.0"
-          }
+  "name": "@satorijs/plugin-im-webui",
+  "description": "IM for Satori",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "author": "Shigma <shigma10826@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
+    "directory": "packages/im"
+  },
+  "bugs": {
+    "url": "https://github.com/koishijs/koishi-plugin-im/issues"
+  },
+  "keywords": [
+    "satori",
+    "plugin",
+    "webui",
+    "chat",
+    "im"
+  ],
+  "cordis": {
+    "service": {}
+  },
+  "peerDependencies": {
+    "@cordisjs/plugin-webui": "^0.1.12",
+    "@satorijs/core": "^4.1.1",
+    "@satorijs/plugin-im": "^0.0.0",
+    "@satorijs/plugin-im-utils": "^0.0.0"
+  },
+  "devDependencies": {
+    "@cordisjs/client": "^0.1.12",
+    "@cordisjs/plugin-http": "^0.5.3",
+    "@cordisjs/plugin-webui": "^0.1.12",
+    "@satorijs/core": "^4.1.1",
+    "@satorijs/plugin-server": "^2.6.5"
+  },
+  "dependencies": {
+    "cordis": "^3.17.7",
+    "cosmokit": "^1.6.2"
+  }
 }
