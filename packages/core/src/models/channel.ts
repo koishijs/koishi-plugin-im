@@ -112,12 +112,21 @@ export class ChannelData {
     })
   }
 
-  updateSettings = async (login: Login, cid: string) => {
+  updateSettings = async (
+    login: Login,
+    cid: string,
+    data: {
+      level?: number
+      nick?: string
+      pinned?: boolean
+    }
+  ) => {
     await this.ctx.database.upsert('satori-im.channel.settings', (row) => [
       {
         lastRead: new Date().getTime(),
         channel: { id: cid },
         user: { id: login.selfId },
+        ...data,
       },
     ])
   }
