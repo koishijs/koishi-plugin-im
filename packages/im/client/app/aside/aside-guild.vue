@@ -9,7 +9,7 @@
         </div>
         <div class="flex flex-col gap-1 px-2">
           <label class="font-size-5 font-bold">{{ guild.name }}</label>
-          <label>创建于 {{ formatTimestamp(guild.createdAt!, 'ymdh') }}</label>
+          <label>创建于 {{ formatTimestamp(guild.createdAt!, 'YMDhm') }}</label>
         </div>
       </div>
       <im-divider spacing="0"></im-divider>
