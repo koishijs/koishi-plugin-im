@@ -1,0 +1,45 @@
+{
+          "name": "@satorijs/adapter-im",
+          "description": "Adapter of Satori IM",
+          "version": "0.0.0",
+          "type": "module",
+          "main": "lib/index.js",
+          "files": [
+                    "lib",
+                    "dist"
+          ],
+          "author": "Shigma <shigma10826@gmail.com>",
+          "license": "MIT",
+          "scripts": {
+                    "lint": "eslint src --ext .ts"
+          },
+          "repository": {
+                    "type": "git",
+                    "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
+                    "directory": "packages/im"
+          },
+          "bugs": {
+                    "url": "https://github.com/koishijs/koishi-plugin-im/issues"
+          },
+          "keywords": [
+                    "satori",
+                    "plugin",
+                    "chat",
+                    "im",
+                    "adapter"
+          ],
+          "peerDependencies": {
+                    "@cordisjs/plugin-webui": "^0.1.12",
+                    "@satorijs/core": "^4.2.6",
+                    "@satorijs/plugin-im": "^0.0.0",
+                    "@satorijs/plugin-server": "^2.7.1"
+          },
+          "devDependencies": {
+                    "@cordisjs/client": "^0.1.12",
+                    "@cordisjs/plugin-webui": "^0.1.12",
+                    "@satorijs/core": "^4.2.6"
+          },
+          "dependencies": {
+                    "cordis": "^3.18.0"
+          }
+}
