@@ -13,6 +13,10 @@ export default class ImDatabase {
         },
         nick: 'char(255)',
         avatar: 'char(255)',
+        isBot: {
+          type: 'boolean',
+          initial: false,
+        },
       },
       {
         primary: ['id'],
@@ -68,6 +72,25 @@ export default class ImDatabase {
       },
       {
         primary: ['user'],
+      }
+    )
+    ctx.model.extend(
+      'satori-im.bot.command',
+      {
+        bot: {
+          type: 'manyToOne',
+          table: 'satori-im.user',
+          target: 'commands',
+        },
+        'bot.id': 'char(255)',
+        'parent.name': 'char(255)',
+        name: 'char(255)',
+        description: 'json',
+        arguments: 'json',
+        options: 'json',
+      },
+      {
+        primary: ['bot.id', 'name', 'parent.name'],
       }
     )
     // FIXME: combined unique doesnt support relation.

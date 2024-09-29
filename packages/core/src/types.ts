@@ -3,6 +3,7 @@ import { Row } from 'minato'
 
 declare module 'minato' {
   interface Tables {
+    'satori-im.bot.command': Bot.Command
     'satori-im.channel.settings': Channel.Settings
     'satori-im.channel': Channel
     'satori-im.friend.settings': Friend.Settings
@@ -83,6 +84,7 @@ export interface User extends Universal.User {
   roles?: Array<Role>
   members?: Array<Member>
   deleted?: boolean
+  commands?: Array<Bot.Command>
 }
 
 export namespace User {
@@ -101,6 +103,13 @@ export namespace User {
 
   export interface Preferences {
     user: User
+  }
+}
+
+export namespace Bot {
+  export interface Command extends Universal.Command {
+    bot: User
+    parent: Command
   }
 }
 
