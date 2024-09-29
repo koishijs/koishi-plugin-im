@@ -6,9 +6,9 @@
           <div
             class="b-rd-1 b-1px b-solid b-[var(--k-color-divider)] min-h-20 p-4 gap-2 flex flex-col bg-[var(--bg2)]"
           >
-            <div class="flex flex-row gap-2">
-              <im-avatar size="small"></im-avatar>
-              <span>{{ getDisplayName(item.user!) }}</span>
+            <div class="flex flex-row gap-2 items-center">
+              <im-avatar size="small" :user="(item as any).self"></im-avatar>
+              <span>{{ getDisplayName((item as any).self) }}</span>
             </div>
             <text v-if="notType(item) === 'new-friend'">希望添加你为好友</text>
             <text v-else-if="notType(item) === 'new-guild'">希望你加入{{ item.guild?.name }}</text>

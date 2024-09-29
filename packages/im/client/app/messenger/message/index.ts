@@ -3,6 +3,18 @@ import { marked, Token, TokenizerExtensionFunction } from 'marked'
 
 export { Token, Tokens as TokenType } from 'marked'
 
+export { default as MdEmphasis } from './emphasis.vue'
+export { default as MdStrong } from './strong.vue'
+export { default as MdImage } from './image.vue'
+export { default as MdCodeSpan } from './code-span.vue'
+export { default as MdCodeBlock } from './code-block.vue'
+export { default as MdList } from './list.vue'
+export { default as MdSpace } from './space.vue'
+export { default as MdParagraph } from './paragraph.vue'
+export { default as MdHeading } from './heading.vue'
+export { default as At } from './at.vue'
+export { default as MdText } from './text.vue'
+
 const tagRegex = /^<(\/?)([^!\s>/]+)([^>]*?)\s*(\/?)>$/
 
 const component: TokenizerExtensionFunction = function (this, src) {
@@ -18,23 +30,7 @@ const component: TokenizerExtensionFunction = function (this, src) {
   return false
 }
 
-export const tokenizer = (content: string): Token[] =>
-  marked.lexer(content, {
-    extensions: {
-      inline: [component],
-    } as any,
-  })
-
-export function renderer(tokens: Token[]): VNode[] {
-  return tokens.map(renderToken).filter(Boolean)
-}
-
-export default function transform(content: string): VNode[] {
-  if (!content) return [h('div')]
-  return renderer(tokenizer(content))
-}
-
-function rendChilds(tokens: Token[]): VNode[] | undefined {
+function rendChildren(tokens: Token[]): VNode[] | undefined {
   if (!tokens) {
     console.log('no tokens')
     return undefined
@@ -53,22 +49,40 @@ function renderToken(token: Token): VNode {
     return h(resolveComponent(name), { ...args })
   } else if (token.type === 'code') {
     return h('code', { content: token.text + '\n' })
+  } else if (token.type === 'codespan') {
+    return h('code', { text: token.raw })
   } else if (token.type === 'paragraph') {
-    return h('p', {}, rendChilds(token.tokens!))
+    return h('div', rendChildren(token.tokens!))
   } else if (token.type === 'image') {
     return h(resolveComponent('md-image'), { src: token.href })
   } else if (token.type === 'blockquote') {
-    return h('blockquote', rendChilds(token.tokens!)) // TODO
+    return h('blockquote', rendChildren(token.tokens!))
   } else if (token.type === 'text') {
     return h('text', token.text)
   } else if (token.type === 'em') {
-    return h('em', rendChilds(token.tokens!))
+    return h('em', rendChildren(token.tokens!))
   } else if (token.type === 'strong') {
-    return h('b', rendChilds(token.tokens!))
+    return h('b', rendChildren(token.tokens!))
   } else if (token.type === 'del') {
-    return h('del', rendChilds(token.tokens!))
+    return h('del', rendChildren(token.tokens!))
   } else if (token.type === 'link') {
-    return h('a', { href: token.href }, rendChilds(token.tokens!))
+    return h('a', { href: token.href }, rendChildren(token.tokens!))
   }
-  return h('p', token.raw)
+  return h('div', token.raw)
+}
+
+export const tokenizer = (content: string): Token[] =>
+  marked.lexer(content, {
+    extensions: {
+      inline: [component],
+    } as any,
+  })
+
+export function renderer(tokens: Token[]): VNode[] {
+  return tokens.map(renderToken).filter(Boolean)
+}
+
+export default function transform(content: string): VNode[] {
+  if (!content) return [h('text')]
+  return renderer(tokenizer(content))
 }

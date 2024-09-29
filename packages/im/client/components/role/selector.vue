@@ -7,13 +7,13 @@
       <div class="grow-1">
         <el-scrollbar>
           <div
-            v-for="value in leftValue.filter((value) => value.user.name!.includes(keyword))"
+            v-for="value in leftItems"
             class="item h-10 p-2 flex flex-row gap-2 items-center justify-between"
             :class="{ active: value.active }"
             @click="handleSelect(value)"
           >
             <div class="flex flex-row gap-2 items-center">
-              <im-avatar size="small" :src="value.user.avatar"></im-avatar>
+              <im-avatar size="small" :user="value.user"></im-avatar>
               <span>{{ value.user.name }}</span>
             </div>
             <k-icon
@@ -35,15 +35,15 @@
         class="flex-1 flex flex-row gap-2 items-center"
       >
         <im-avatar
-          v-for="item in rightValue"
+          v-for="item in rightItems"
           :key="item.user.id"
           size="small"
-          :src="item.user.avatar"
+          :user="item.user"
           @click="handleSelectCancel"
         ></im-avatar>
       </transition-group>
       <div class="font-size-3 color-[var(--fg2)]">
-        {{ rightValue.length }} of {{ leftValue.length }}
+        {{ rightItems.length }} of {{ leftItems.length }}
       </div>
     </div>
   </div>
@@ -69,30 +69,34 @@ const props = defineProps<{
 }>()
 
 onMounted(() => {
-  getLeftValue().then(() => (loaded.value = true))
+  getItems().then(() => (loaded.value = true))
 })
 
 onBeforeUnmount(() => {
-  leftValue.value = []
+  items.value = []
 })
 
 const loaded = ref(false)
 
 const keyword = ref<string>('')
-const leftValue = ref<Array<SelectItem>>([])
-const rightValue = computed(() => leftValue.value.filter((item) => item.active))
-watch(
-  () => rightValue.value,
-  (right) => {
-    selected.value = right.map((item) => item.user.id)
-  }
+const items = ref<Array<SelectItem>>([])
+const leftItems = computed(() =>
+  items.value.filter(
+    (item) =>
+      item.user.name!.includes(keyword.value) &&
+      !props.except.find((value) => value === item.user.id)
+  )
 )
+const rightItems = computed(() => leftItems.value.filter((item) => item.active))
+watch(rightItems.value, (newValue) => {
+  selected.value = newValue.map((item) => item.user.id)
+})
 
-async function getLeftValue() {
+async function getItems() {
   if (props.type === 'member' && props.gid) {
-    leftValue.value = initSelectable(await chat._getAllMembers(props.gid))
+    items.value = initSelectable(await chat._getAllMembers(props.gid))
   } else {
-    leftValue.value = initSelectable(chat.friends.value)
+    items.value = initSelectable(chat.friends.value)
   }
 }
 
@@ -101,7 +105,7 @@ function handleSelect(value: SelectItem) {
 }
 
 function handleSelectCancel(value: SelectItem) {
-  const result = leftValue.value.find((item) => item === value)
+  const result = leftItems.value.find((item) => item === value)
   if (result) result.active = false
 }
 

@@ -1,10 +1,11 @@
+<!-- TODO: migrate to selector -->
 <template>
   <div class="flex flex-col gap-2">
     <slot name="header"></slot>
     <el-scrollbar>
       <div
         v-for="item in page.data"
-        class="item flex flex-row items-center"
+        class="item flex flex-col"
         :class="{ active: isSelected(item) }"
         @click="handleSelect(item)"
       >
@@ -15,19 +16,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, watch } from 'vue'
-import { send, useContext, MaybeArray } from '@cordisjs/client'
+import { computed, ref, reactive, watch, onMounted } from 'vue'
+import { send, useContext } from '@cordisjs/client'
 import type { Im } from '@satorijs/plugin-im'
 import { debounce } from '../../utils'
 
 const chat = useContext()['im.client']
 
-const selected = defineModel<MaybeArray<any>>({ default: [] })
+const selected = defineModel<any>()
 
 const props = defineProps<{
   type: string
   keyword: string
-  selectMode: 'single' | 'multiple'
 }>()
 
 const page = reactive<Im.ChunkData>({
@@ -37,42 +37,23 @@ const page = reactive<Im.ChunkData>({
 })
 const loaded = ref<boolean>(true)
 
-const except = computed(() =>
-  (Array.isArray(selected.value) ? selected.value : [selected.value]).map((value) => value.id)
-)
-
-watch(
-  () => props.keyword,
-  (keyword) =>
-    debounce(() => {
-      fetchPage(props.type as any, keyword).then((data) => {
-        page.data = data!
-        loaded.value = true
-      })
+onMounted(() => {
+  watch(
+    () => props.keyword,
+    debounce(async (keyword) => {
+      const data = await fetchPage(props.type as any, keyword)
+      page.data = data!
+      loaded.value = true
     }, 500)
-)
+  )
+})
 
 function isSelected(item: Im.User) {
-  if (props.selectMode === 'multiple') {
-    return Array.isArray(selected.value) && selected.value.includes(item)
-  } else {
-    return selected.value === item
-  }
+  return selected.value === item
 }
 
 function handleSelect(item: Im.User) {
-  if (props.selectMode === 'multiple') {
-    const newValue = Array.isArray(selected.value) ? [...selected.value] : []
-    const index = newValue.indexOf(item)
-    if (index > -1) {
-      newValue.splice(index, 1)
-    } else {
-      newValue.push(item)
-    }
-    selected.value = newValue
-  } else {
-    selected.value === item ? (selected.value = null) : (selected.value = item)
-  }
+  selected.value === item ? (selected.value = null) : (selected.value = item)
 }
 
 async function fetchPage(
@@ -90,9 +71,9 @@ async function fetchPage(
       direction,
       cursor: cursorId,
       limit: 10,
-      except: [...except.value, chat.getLogin().selfId],
+      except: [chat.getLogin().selfId!],
     },
-  }).then()
+  })
 }
 </script>
 

@@ -10,7 +10,9 @@
             </div>
           </template>
         </k-form>
-        <im-avatar size="extreme"></im-avatar>
+        <file-picker @add="uploadAvatar" accept="image/*"
+          ><im-avatar editable :user="chat.getLogin().user" size="extreme"></im-avatar>
+        </file-picker>
       </div>
       <h1 class="k-schema-header">其他选项</h1>
       <essential class="w-30" label="登出" @confirm="logout"></essential>
@@ -40,6 +42,13 @@ const rule = Schema.object({
     .pattern(/^[a-zA-Z0-9_]+$/)
     .description('在平台内显示的昵称'),
 })
+
+async function uploadAvatar(files: string) {
+  const avatar = files[0].b64
+
+  await send('im/v1/avatar-upload', { login: chat.getLogin(), b64: avatar })
+  message.success('上传成功!')
+}
 
 function uploadSettings() {
   try {

@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-1 p-4">
         <div class="flex flex-row items-end relative">
           <file-picker @add="uploadAvatar" accept="image/*"
-            ><im-avatar size="large" :name="guild.name" :src="guild.avatar" editable></im-avatar
+            ><im-avatar size="large" :guild="guild" editable></im-avatar
           ></file-picker>
         </div>
         <div class="flex flex-col gap-1 px-2">
@@ -14,8 +14,10 @@
       </div>
       <im-divider spacing="0"></im-divider>
       <div class="h-30 px-3 py-1 flex flex-col">
-        <label class="font-size-5 overflow-hidden text-ellipsis">announcement.name</label>
-        <div class="overflow-hidden text-ellipsis">text</div>
+        <label v-if="false" class="font-size-5 overflow-hidden text-ellipsis"
+          >announcement.name</label
+        >
+        <div class="overflow-hidden text-ellipsis color-[var(--fg2)]">空</div>
       </div>
       <im-divider spacing="0"></im-divider>
       <settings-collapse
@@ -62,7 +64,7 @@
       <el-scrollbar>
         <div v-for="member in members" class="p-2 flex flex-row justify-between">
           <div class="flex flex-row gap-2 items-center">
-            <im-avatar size="tiny"></im-avatar>
+            <im-avatar size="tiny" :user="member.user"></im-avatar>
             <div>{{ /* TODO: */ getDisplayName(member.user, undefined, member) }}</div>
             <im-tag
               v-if="member.roles"
@@ -89,7 +91,7 @@
         v-model="toInvite"
         class="h-80 b-1px b-solid b-[var(--k-color-divider)]"
         type="friend"
-        :except="guild.members"
+        :except="guild.members?.map((value) => value.user.id)"
         filterable
         show-result
       ></user-selector>
@@ -187,10 +189,14 @@ const notifyLevelOptions = [
   },
 ]
 
-async function uploadAvatar(files: string) {
-  const avatar = files[0]
+async function uploadAvatar(files: { b64: string; type: string }[]) {
+  const avatar = files[0].b64
 
-  await send('im/v1/avatar-upload', { login: chat.getLogin(), b64: avatar, gid: guild.value.id })
+  await send('im/v1/avatar-upload', {
+    login: chat.getLogin(),
+    b64: avatar,
+    gid: guild.value.id,
+  })
   message.success('上传成功!')
 }
 

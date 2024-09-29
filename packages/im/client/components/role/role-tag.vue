@@ -1,24 +1,20 @@
 <template>
-  <label
-    class="im-tag font-size-2.75 color-[var(--bg2)] px-0.5 py-0.1"
-    :style="{ backgroundColor: `#${color.toString(16)}` }"
+  <span
+    class="im-tag font-size-2.75 color-[var(--bg2)] px-0.75 py-0.25"
+    :style="{ backgroundColor: `#${tag.color.toString(16)}` }"
   >
-    {{ tagName }}
-  </label>
+    {{ tag.name }}
+  </span>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
 const props = defineProps<{
-  // color: number
   title: string
 }>()
 
-const bgColor = 0x39c5bb
-const color = 0x39c5bb
-
-const tagName = computed(() => {
+const tag = computed(() => {
   if (props.title[0] === '$') {
     return alias[props.title]
   }
@@ -26,8 +22,8 @@ const tagName = computed(() => {
 })
 
 const alias = {
-  $a: '群主',
-  $m: '管理',
+  $a: { name: '群主', color: 0xff9800 },
+  $m: { name: '管理员', color: 0x009688 },
 }
 </script>
 

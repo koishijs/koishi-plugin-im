@@ -2,7 +2,7 @@
   <im-aside ref="containerRef" @ready="emit('ready')" @fold="emit('fold')">
     <div class="flex flex-col">
       <div class="flex flex-col gap-1 p-4">
-        <im-avatar size="large" :name="friend.user.name"></im-avatar>
+        <im-avatar size="large" :user="friend.user"></im-avatar>
         <div class="px-1 flex flex-row gap-1 items-center">
           <label>{{ getDisplayName(friend.user, { name: friend.nick! }) }}</label>
           <label class="color-[var(--fg2)]">@{{ friend.user.name }}</label>
@@ -10,8 +10,10 @@
       </div>
       <im-divider spacing="0"></im-divider>
       <div class="h-30 px-3 py-1 flex flex-col">
-        <label class="font-size-5 overflow-hidden text-ellipsis">announcement.name</label>
-        <div class="overflow-hidden text-ellipsis">text</div>
+        <label v-if="false" class="font-size-5 overflow-hidden text-ellipsis"
+          >announcement.name</label
+        >
+        <div class="overflow-hidden text-ellipsis color-[var(--fg2)]">空</div>
       </div>
       <im-divider spacing="0"></im-divider>
       <settings-collapse

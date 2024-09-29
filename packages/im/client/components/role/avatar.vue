@@ -1,12 +1,17 @@
+<!-- TODO: migrate to selector -->
 <template>
   <div class="avatar relative" :class="sizeList">
     <img v-if="src" class="h-full w-full" :src="withProxy(src)" />
     <div
-      v-else
+      v-else-if="showBrief"
       class="h-full w-full bg-[var(--bg3)] font-bold color-[var(--fg3)] flex justify-center items-center"
     >
       {{ name && short(name) }}
     </div>
+    <div
+      v-else
+      class="h-full w-full bg-[var(--bg3)] font-bold color-[var(--fg3)] flex justify-center items-center"
+    ></div>
     <div v-if="editable" class="edit h-full w-full flex items-center justify-center">
       <k-icon name="im:edit"></k-icon>
     </div>
@@ -14,22 +19,24 @@
 </template>
 
 <script setup lang="ts">
-import { withDefaults } from 'vue'
+import { withDefaults, ref } from 'vue'
 import { useRpc } from '@cordisjs/client'
-import type { Login } from '@satorijs/protocol'
+import type { Im } from '@satorijs/plugin-im'
 import getWidth from 'string-width'
 import type { Data } from '../../../src'
 
 const props = withDefaults(
   defineProps<{
-    src?: string
-    name?: string
-    login: Login
+    instance: { avatar: string; name: string }
+    guild?: Im.Guild
+    user?: Im.User
     size: 'tiny' | 'small' | 'medium' | 'large' | 'extreme'
     editable: boolean
+    showBrief: boolean
   }>(),
   {
     editable: false,
+    showBrief: true,
   }
 )
 const size = props.size || 'small'
@@ -41,6 +48,10 @@ const sizeList = {
   'w-24 h-24 font-size-12': size === 'large',
   'w-48 h-48 font-size-24': size === 'extreme',
 }
+
+const instance = props.instance || props.guild || props.user || { avatar: undefined, name: '' }
+const src = ref(instance?.avatar)
+const name = ref(instance?.name)
 
 const data = useRpc<Data>()
 

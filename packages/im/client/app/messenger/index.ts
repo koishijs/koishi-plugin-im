@@ -2,6 +2,8 @@ import { Context, send } from '@cordisjs/client'
 import type { Im } from '@satorijs/plugin-im'
 import transform from './message'
 import MdImage from './message/image.vue'
+import MdInlineElement from './message/md-inline.vue'
+import MdBlockElement from './message/md-block.vue'
 import MdUnknown from './message/unknown.vue'
 
 export { default as ChatScene } from './chat.vue'
@@ -9,6 +11,18 @@ export { default as ChatScene } from './chat.vue'
 declare module '@cordisjs/client' {
   interface ActionContext {
     message: Im.Message
+  }
+}
+
+declare module '@satorijs/plugin-im' {
+  namespace Im {
+    interface CombinedMessages {
+      user: User
+      messages: Array<Message>
+      lastTimestamp: number
+      member?: Member
+      roles?: Array<Role>
+    }
   }
 }
 
@@ -98,7 +112,7 @@ export default function (ctx: Context) {
         send('im/v1/message/recall', {
           login: chat.getLogin(),
           cid: message.channel!.id,
-          id: message.id!,
+          mid: message.id!,
         })
       },
     })
@@ -107,6 +121,8 @@ export default function (ctx: Context) {
     })
   })
 
+  ctx.app.component('md-block', MdBlockElement)
   ctx.app.component('md-image', MdImage)
+  ctx.app.component('md-inline', MdInlineElement)
   ctx.app.component('md-unknown', MdUnknown)
 }

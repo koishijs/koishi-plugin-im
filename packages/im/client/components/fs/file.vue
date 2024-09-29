@@ -23,7 +23,7 @@ const picker = ref<HTMLInputElement>()
 
 const emit = defineEmits(['add'])
 
-const model = defineModel<Dict<string>>({ default: {} })
+const model = defineModel<Dict<{ b64: string; type: string }>>({ default: {} })
 const props = withDefaults(
   defineProps<{
     accept: string
@@ -52,9 +52,8 @@ async function handleChange(event: Event) {
             const result = reader.result as string | null
             if (result) {
               id = genId()
-              console.log(result)
-              b64s.push(result)
-              model.value[id] = result
+              b64s.push({ b64: result, type: file.type })
+              model.value[id] = { b64: result, type: file.type }
             }
             resolve(result)
           }
