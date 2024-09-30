@@ -6,7 +6,7 @@
   >
     <!-- TODO: -->
     <im-avatar size="small" :instance="data"></im-avatar>
-    <div class="flex-1 flex flex-col gap-1 max-w-60%">
+    <div class="flex-1 flex flex-col gap-1 max-w-65%">
       <div class="ellipsis font-bold">
         <label>{{ data.title }}</label>
         <label v-if="data.subtitle" class="color-[var(--fg2)]">{{ `:${data.subtitle}` }}</label>

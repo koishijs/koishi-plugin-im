@@ -11,7 +11,7 @@
     <div class="relative p-2">
       <span v-if="isEmpty" class="absolute color-[var(--fg2)]">输入文字...</span>
       <el-scrollbar max-height="5rem">
-        <div ref="editorRef" contenteditable="true" class="textarea min-h-20">
+        <div ref="editorRef" contenteditable="true" spellcheck="false" class="textarea min-h-20">
           <component
             v-for="(line, index) in lines"
             :is="line"

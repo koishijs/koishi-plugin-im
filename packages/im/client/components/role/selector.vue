@@ -60,13 +60,17 @@ const chat = useContext()['im.client']
 
 const selected = defineModel<string[]>()
 
+// HACK: Cannot use local variables in defineProps() due to hoisting.
+// Manually setting 'except' default value.
 const props = defineProps<{
   type: 'friend' | 'member'
-  except: string[]
+  except?: string[]
   gid?: string
   filterable?: boolean
   showResult?: boolean
 }>()
+
+const except = props.except || [chat.getLogin().user!.id]
 
 onMounted(() => {
   getItems().then(() => (loaded.value = true))
@@ -83,13 +87,13 @@ const items = ref<Array<SelectItem>>([])
 const leftItems = computed(() =>
   items.value.filter(
     (item) =>
-      item.user.name!.includes(keyword.value) &&
-      !props.except.find((value) => value === item.user.id)
+      item.user.name!.includes(keyword.value) && !except.find((value) => value === item.user.id)
   )
 )
-const rightItems = computed(() => leftItems.value.filter((item) => item.active))
-watch(rightItems.value, (newValue) => {
-  selected.value = newValue.map((item) => item.user.id)
+const rightItems = computed(() => {
+  const items = leftItems.value.filter((item) => item.active)
+  selected.value = items.map((item) => item.user.id)
+  return items
 })
 
 async function getItems() {

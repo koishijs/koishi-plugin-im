@@ -48,7 +48,7 @@ function renderToken(token: Token): VNode {
     }
     return h(resolveComponent(name), { ...args })
   } else if (token.type === 'code') {
-    return h('code', { content: token.text + '\n' })
+    return h('code', token.text + '\n')
   } else if (token.type === 'codespan') {
     return h('code', { text: token.raw })
   } else if (token.type === 'paragraph') {

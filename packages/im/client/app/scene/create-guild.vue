@@ -6,7 +6,7 @@
       </im-form-item>
 
       <im-form-item label="初始频道名称" description="非必填">
-        <el-input class="w-30%" v-model="guildForm.name"></el-input>
+        <el-input class="w-30%" v-model="guildForm.channelName"></el-input>
       </im-form-item>
 
       <im-form-item label="选择成员" description="成员仅可从好友邀请">

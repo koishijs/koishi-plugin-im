@@ -4,7 +4,7 @@ import { Context, Dict, Service, Universal } from '@satorijs/core'
 import { Login, User } from './types'
 import { genId, validate } from '@satorijs/plugin-im-utils'
 
-export class ImAuthService extends Service {
+export default class ImAuthService extends Service {
   static inject = ['model', 'database']
   public logins: Dict<Login> = {}
 

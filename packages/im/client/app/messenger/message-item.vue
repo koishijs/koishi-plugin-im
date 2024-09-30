@@ -5,8 +5,8 @@
       <div class="flex flex-row items-center gap-0.5">
         <im-tag
           v-if="hasRole()"
-          :color="`#${span.roles[0].color}`"
-          :title="span.roles[0].name"
+          :color="`#${span.roles[0]?.color}`"
+          :title="span.roles[0]?.name"
         ></im-tag>
         <label>{{ sender.name }}</label>
       </div>

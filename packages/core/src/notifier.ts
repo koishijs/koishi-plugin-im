@@ -1,7 +1,7 @@
 import { Context, Dict, Service } from '@satorijs/core'
 import { Event, Login } from './types'
 
-export class ImEventService extends Service {
+export default class ImEventService extends Service {
   static inject = ['database', 'im', 'im.auth']
   private currentEventId: number // ?
   eventChans: Dict<Event> = {}

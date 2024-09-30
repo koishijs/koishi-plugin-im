@@ -1,8 +1,8 @@
 import { Context, Service } from '@satorijs/core'
 import ImDatabase from './database'
-import { ImAuthService } from './auth'
+import ImAuthService from './auth'
 import ImDataService from './data'
-import { ImEventService } from './notifier'
+import ImEventService from './notifier'
 import { Event } from './types'
 
 export * as Im from './types'
