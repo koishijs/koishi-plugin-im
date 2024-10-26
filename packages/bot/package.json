@@ -29,17 +29,12 @@
     "adapter"
   ],
   "peerDependencies": {
-    "@cordisjs/plugin-webui": "^0.1.12",
     "@satorijs/core": "^4.2.6",
-    "@satorijs/plugin-im": "^0.0.0",
-    "@satorijs/plugin-server": "^2.7.1"
+    "@satorijs/plugin-im": "^0.0.0"
   },
   "devDependencies": {
     "@cordisjs/client": "^0.1.12",
-    "@cordisjs/plugin-webui": "^0.1.12",
-    "@satorijs/core": "^4.2.6"
-  },
-  "dependencies": {
-    "cordis": "^3.18.0"
+    "@satorijs/core": "^4.2.6",
+    "@satorijs/plugin-im": "^0.0.0"
   }
 }

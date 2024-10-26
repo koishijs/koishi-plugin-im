@@ -42,9 +42,11 @@
     "@cordisjs/plugin-http": "^0.5.3",
     "@cordisjs/plugin-webui": "^0.1.12",
     "@satorijs/core": "^4.1.1",
+    "@satorijs/plugin-im": "^0.0.0",
     "@satorijs/plugin-server": "^2.6.5"
   },
   "dependencies": {
+    "@satorijs/plugin-im-utils": "^0.0.0",
     "cordis": "^3.17.7",
     "cosmokit": "^1.6.2"
   }
