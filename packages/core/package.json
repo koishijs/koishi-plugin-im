@@ -1,6 +1,6 @@
 {
-  "name": "@satorijs/plugin-im-webui",
-  "description": "IM for Satori",
+  "name": "@satorijs/plugin-im",
+  "description": "Background for Satori IM",
   "version": "0.0.0",
   "type": "module",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/koishijs/koishi-plugin-im.git",
-    "directory": "packages/im"
+    "directory": "packages/core"
   },
   "bugs": {
     "url": "https://github.com/koishijs/koishi-plugin-im/issues"
@@ -24,30 +24,34 @@
   "keywords": [
     "satori",
     "plugin",
-    "webui",
     "chat",
-    "im"
+    "im",
+    "database"
   ],
   "cordis": {
-    "service": {}
+    "service": {
+      "implements": [
+        "im.auth",
+        "im.data",
+        "im.event",
+        "im"
+      ]
+    }
   },
   "peerDependencies": {
-    "@cordisjs/plugin-webui": "^0.1.12",
-    "@satorijs/core": "^4.1.1",
-    "@satorijs/plugin-im": "^0.0.0",
-    "@satorijs/plugin-im-utils": "^0.0.0"
+    "minato": "^3.5.0"
   },
   "devDependencies": {
     "@cordisjs/client": "^0.1.12",
-    "@cordisjs/plugin-http": "^0.5.3",
-    "@cordisjs/plugin-webui": "^0.1.12",
-    "@satorijs/core": "^4.1.1",
-    "@satorijs/plugin-im": "^0.0.0",
-    "@satorijs/plugin-server": "^2.6.5"
+    "@cordisjs/plugin-server": "^0.2.3",
+    "@satorijs/core": "^4.2.6",
+    "@types/mime-types": "^2",
+    "minato": "^3.5.0"
   },
   "dependencies": {
+    "@satorijs/core": "^4.2.6",
     "@satorijs/plugin-im-utils": "^0.0.0",
-    "cordis": "^3.17.7",
-    "cosmokit": "^1.6.2"
+    "cosmokit": "^1.6.2",
+    "mime-types": "^2.1.35"
   }
 }
